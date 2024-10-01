@@ -16,7 +16,7 @@ pipeline {
             steps {
                 git url: 'https://github.com/chayma24/projet-devops.git',
                 branch: 'chaima-gharbi',
-                credentialsId: 'jenkins_token_chaima'
+                credentialsId: 'jenkins_token'
             }
         }
 
