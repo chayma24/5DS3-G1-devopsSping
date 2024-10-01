@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'M2_HOME'
+        jdk 'JAVA_HOME'
+    }
+
+    environment {
+        // Allocate a maximum of 1024 MB (1 GB) of heap memory.
+        MAVEN_OPTS = '-Xmx1024m'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/chayma24/projet-devops.git',
+                branch: 'chaima-gharbi',
+                credentialsId: 'jenkins_token_chaima'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('DevOps_Project') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build successful!'
+        }
+        failure {
+//             mail to: 'Chayma.Gharbi@esprit.tn',
+//                  subject: "Jenkins Build Failed: ${env.JOB_NAME}",
+//                  body: "Build ${env.BUILD_NUMBER} of job ${env.JOB_NAME} failed. Check Jenkins for details."
+            echo 'Build failed'
+        }
+    }
+}
