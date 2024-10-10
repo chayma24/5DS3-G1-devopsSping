@@ -24,5 +24,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 	@Modifying
 	@Query("update Invoice i set i.archived=true where i.idInvoice=?1")
 	void updateInvoice(Long id);
+
+	List<Invoice> findByArchived(boolean archived);
+
+	List<Invoice> findByAmountInvoiceGreaterThan(float amountInvoice);
 	
 }

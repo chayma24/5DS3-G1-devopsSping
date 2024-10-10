@@ -17,4 +17,12 @@ public interface IInvoiceService {
 	void assignOperatorToInvoice(Long idOperator, Long idInvoice);
 
 	float getTotalAmountInvoiceBetweenDates(Date startDate, Date endDate);
+
+	List<Invoice> getInvoicesByStatus(boolean isArchived);
+
+	float calculateInvoiceTax(Long invoiceId);
+
+	long countInvoicesBySupplier(Long supplierId);
+
+	List<Invoice> findInvoicesByAmountGreaterThan(float amount);
 }

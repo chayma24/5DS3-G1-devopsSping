@@ -13,6 +13,7 @@ import tn.esprit.devops_project.repositories.SupplierRepository;
 import tn.esprit.devops_project.services.Iservices.IInvoiceService;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		invoice.setArchived(true);
 		invoiceRepository.save(invoice);
 		//method 02 (Avec JPQL)
-		invoiceRepository.updateInvoice(invoiceId);
+		//invoiceRepository.updateInvoice(invoiceId);
 	}
 
 	@Override
@@ -64,5 +65,32 @@ public class InvoiceServiceImpl implements IInvoiceService {
 		return invoiceRepository.getTotalAmountInvoiceBetweenDates(startDate, endDate);
 	}
 
+	// ---
+	@Override
+	public List<Invoice> getInvoicesByStatus(boolean isArchived) {
+		return invoiceRepository.findByArchived(isArchived);
+	}
 
+	@Override
+	public float calculateInvoiceTax(Long invoiceId) {
+		Invoice invoice = invoiceRepository.findById(invoiceId)
+				.orElseThrow(() -> new NullPointerException("Invoice not found"));
+		if (invoice.getAmountInvoice() <= 0) {
+			throw new IllegalArgumentException("Invalid invoice amount");
+		}
+		float taxRate = 0.13f;
+		return invoice.getAmountInvoice() * taxRate;
+	}
+
+	@Override
+	public long countInvoicesBySupplier(Long supplierId) {
+		Supplier supplier = supplierRepository.findById(supplierId)
+				.orElseThrow(() -> new NullPointerException("Supplier not found"));
+		return supplier.getInvoices().size();
+	}
+
+	@Override
+	public List<Invoice> findInvoicesByAmountGreaterThan(float amount) {
+		return invoiceRepository.findByAmountInvoiceGreaterThan(amount);
+	}
 }
