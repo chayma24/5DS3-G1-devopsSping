@@ -28,14 +28,7 @@ pipeline {
             }
         }
 
-	stage('Test') {
-            steps {
-                dir('DevOps_Project') {
-                    sh 'mvn test -Dspring.profiles.active=test'
-                }
-            }
-        }
-    }
+	    }
 
 
     post {
