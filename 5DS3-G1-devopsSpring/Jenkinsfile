@@ -35,7 +35,27 @@ pipeline {
                 }
             }
         }
+        
+    stage('Build Docker Image') {
+            steps {
+                dir('DevOps_Project') {
+                    script {
+                        sh 'docker build -t $chaimagharbi-5ds3-g1-devopsspring .'
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "$docker_id", passwordVariable: 'ayana666#', usernameVariable: 'chayma24')]) {
+                    sh 'docker login -u $chayma24 -p $ayana666#'
+                    sh 'docker push $chaimagharbi/chaimagharbi-5ds3-g1-devopsspring'
+                }
+            }
+        }
     }
+
 
 
     post {
