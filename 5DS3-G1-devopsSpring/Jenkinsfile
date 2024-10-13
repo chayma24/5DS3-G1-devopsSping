@@ -40,7 +40,7 @@ pipeline {
             steps {
                 dir('5DS3-G1-devopsSpring') {
                     script {
-                        sh 'docker build -t 5DS3-G1-devopsSpring'
+                        sh 'docker build -t 5ds3-g1-devopsSpring .'
                     }
                 }
             }
