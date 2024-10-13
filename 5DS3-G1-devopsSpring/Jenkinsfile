@@ -47,6 +47,7 @@ pipeline {
         }
 
 
+
         stage('Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "$docker_id", passwordVariable: 'ayana666#', usernameVariable: 'chayma24')]) {
