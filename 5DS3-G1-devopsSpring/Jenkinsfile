@@ -47,15 +47,19 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "$docker_id", passwordVariable: 'ayana666#', usernameVariable: 'chayma24')]) {
-                    sh 'docker login -u chayma24 -p ayana666#'
-                    sh 'docker push chaimagharbi/chaimagharbi-5ds3-g1-devopsspring'
-                }
+    steps {
+        script {
+            def imageName = '5ds3-g1-devopsspring'
+            def dockerHubCredentialsId = 'docker_id' 
+            
+            withCredentials([usernamePassword(credentialsId: dockerHubCredentialsId, passwordVariable: 'ayana666#', usernameVariable: 'chayma24')]) {
+                sh "echo ayana666# | docker login -u chayma24 --password-stdin"
+                sh "docker push ${imageName}"
             }
         }
-
     }
+}
+
 
     post {
         success {
