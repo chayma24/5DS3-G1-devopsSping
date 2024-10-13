@@ -58,7 +58,7 @@ pipeline {
 
     post {
         success {
-            echo 'Build successful!'
+            echo 'Build successful!!'
         }
         failure {
 //             mail to: 'Chayma.Gharbi@esprit.tn',
