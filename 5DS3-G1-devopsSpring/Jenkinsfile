@@ -14,8 +14,8 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://github.com/chayma24/projet-devops.git',
-                branch: 'chaima-gharbi',
+                git url: 'https://github.com/chayma24/5DS3-G1-devopsSping.git',
+                branch: 'ChaimaGharbi-5DS3-G1',
                 credentialsId: 'jenkins_token_backend'
             }
         }
