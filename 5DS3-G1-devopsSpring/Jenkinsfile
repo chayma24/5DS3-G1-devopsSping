@@ -40,7 +40,7 @@ pipeline {
             steps {
                 dir('5DS3-G1-devopsSpring') {
                     script {
-                        sh 'docker build -t $chaimagharbi-5ds3-g1-devopsspring .'
+                        sh 'docker build -t 5DS3-G1-devopsSpring'
                     }
                 }
             }
@@ -49,8 +49,8 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "$docker_id", passwordVariable: 'ayana666#', usernameVariable: 'chayma24')]) {
-                    sh 'docker login -u $chayma24 -p $ayana666#'
-                    sh 'docker push $chaimagharbi/chaimagharbi-5ds3-g1-devopsspring'
+                    sh 'docker login -u chayma24 -p ayana666#'
+                    sh 'docker push chaimagharbi/chaimagharbi-5ds3-g1-devopsspring'
                 }
             }
         }
