@@ -50,11 +50,12 @@ pipeline {
             steps {
                 script {
                     def imageName = '5ds3-g1-devopsspring'
-                    def dockerHubCredentialsId = 'docker_id' 
-                    
-                    withCredentials([usernamePassword(credentialsId: dockerHubCredentialsId, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
-                        sh "docker push ${imageName}"
+            def dockerHubCredentialsId = 'docker_id' 
+            
+            withCredentials([usernamePassword(credentialsId: dockerHubCredentialsId, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
+                sh "docker tag ${imageName} ${DOCKER_USERNAME}/${imageName}:latest"
+                sh "docker push ${DOCKER_USERNAME}/${imageName}:latest"
                     }
                 }
             }
