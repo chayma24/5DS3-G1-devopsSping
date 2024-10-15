@@ -46,6 +46,12 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	}
 
 	@Override
+	public Invoice addInvoice(Invoice invoice) {
+
+		return invoiceRepository.save(invoice);
+	}
+
+	@Override
 	public List<Invoice> getInvoicesBySupplier(Long idSupplier) {
 		Supplier supplier = supplierRepository.findById(idSupplier).orElseThrow(() -> new NullPointerException("Supplier not found"));
 		return (List<Invoice>) supplier.getInvoices();
@@ -63,6 +69,38 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	public float getTotalAmountInvoiceBetweenDates(Date startDate, Date endDate) {
 		return invoiceRepository.getTotalAmountInvoiceBetweenDates(startDate, endDate);
 	}
+
+	@Override
+	public void deleteInvoice(Long InvoiceId) {
+		invoiceRepository.deleteById(InvoiceId);
+
+	}
+
+	@Override
+	public void applyDiscountToSupplierInvoices(Long supplierId, float discountPercentage, Date startDate, Date endDate) {
+		// Step 1: Retrieve the supplier
+		Supplier supplier = supplierRepository.findById(supplierId)
+				.orElseThrow(() -> new NullPointerException("Supplier not found"));
+
+		// Step 2: Retrieve the invoices within the date range
+		List<Invoice> invoices = invoiceRepository.findInvoicesBySupplierAndDateRange(supplier, startDate, endDate);
+
+		// Step 3: Apply the discount
+		for (Invoice invoice : invoices) {
+			if (!invoice.getArchived()) {
+				// Calculate the discount amount
+				float discountAmount = invoice.getAmountInvoice() * (discountPercentage / 100);
+				// Apply the discount
+				invoice.setAmountDiscount(discountAmount);
+				invoice.setAmountInvoice(invoice.getAmountInvoice() - discountAmount);
+				// Update the last modification date
+				invoice.setDateLastModificationInvoice(new Date());
+				// Save the updated invoice
+				invoiceRepository.save(invoice);
+			}
+		}
+	}
+
 
 
 }

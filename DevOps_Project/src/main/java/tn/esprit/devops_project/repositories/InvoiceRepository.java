@@ -24,5 +24,12 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 	@Modifying
 	@Query("update Invoice i set i.archived=true where i.idInvoice=?1")
 	void updateInvoice(Long id);
+
+	@Query("SELECT i FROM Invoice i WHERE i.supplier = :supplier " +
+			"AND i.dateCreationInvoice >= :startDate " +
+			"AND i.dateCreationInvoice <= :endDate")
+	List<Invoice> findInvoicesBySupplierAndDateRange(@Param("supplier") Supplier supplier,
+													 @Param("startDate") Date startDate,
+													 @Param("endDate") Date endDate);
 	
 }
