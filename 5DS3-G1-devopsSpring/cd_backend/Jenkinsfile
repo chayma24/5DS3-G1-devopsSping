@@ -43,30 +43,37 @@ pipeline {
         }
 
         stage('Download JAR Artifact') {
-            steps {
-                script {
-                    def jarFile = params.JAR_FILE
-                    def ciBuildNumber = params.ciBuildNumber
-                    env.jarFileName = jarFile.substring(jarFile.lastIndexOf('/') + 1)
+    steps {
+        script {
+            def jarFile = params.JAR_FILE
+            def ciBuildNumber = params.ciBuildNumber
+            env.jarFileName = jarFile.substring(jarFile.lastIndexOf('/') + 1)
 
-                    if (jarFile == '' || ciBuildNumber == '') {
-                        error("Missing required parameters: JAR_FILE or ciBuildNumber")
-                    }
+            if (jarFile == '' || ciBuildNumber == '') {
+                error("Missing required parameters: JAR_FILE or ciBuildNumber")
+            }
 
-                    echo "JAR file location: ${jarFile}"
-                    echo "Build Number: ${ciBuildNumber}"
-                    echo "JAR file name: ${env.jarFileName}"
+            echo "JAR file location: ${jarFile}"
+            echo "Build Number: ${ciBuildNumber}"
+            echo "JAR file name: ${env.jarFileName}"
 
-                    copyArtifacts(
-                        projectName: env.UPSTREAM_PIPELINE,
-                        selector: specific(ciBuildNumber),
-                        filter: jarFile,
-                        flatten: true,
-                        target: env.SPRING_BOOT_PROJECT_NAME
-                    )
-                }
+            echo "About to copy artifacts from ${env.UPSTREAM_PIPELINE} with filter ${jarFile}"
+
+            try {
+                copyArtifacts(
+                    projectName: env.UPSTREAM_PIPELINE,
+                    selector: specific(ciBuildNumber),
+                    filter: jarFile,
+                    flatten: true,
+                    target: env.SPRING_BOOT_PROJECT_NAME
+                )
+            } catch (Exception e) {
+                error("Failed to copy artifacts: ${e.message}")
             }
         }
+    }
+}
+
 
         stage('Build Docker Image') {
             steps {
