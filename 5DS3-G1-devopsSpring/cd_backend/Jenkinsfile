@@ -10,10 +10,7 @@ pipeline {
         CD_JENKINSFILE_GH_PATH = '5DS3-G1-devopsSpring/cd_backend/Jenkinsfile'
         DOCKERFILE_GH_PATH = '5DS3-G1-devopsSpring/Dockerfile'
         DOCKER_CONFIG_SECRET = 'docker_id'
-        EMAIL_TEMP_SCRIPT = '5DS3-G1-devopsSpring/cd_email_template.groovy'
         DOCKER_IMAGE_NAME = 'chayma24/5ds3-g1-devopsspring'
-        EMAIL_TO = 'chayma.gharbi@esprit.tn'
-        EMAIL_FROM = 'chaymagharbi10@gmail.com'
     }
 
     parameters {
@@ -34,8 +31,7 @@ pipeline {
                         extensions: [
                             [$class: 'SparseCheckoutPaths',
                                 sparseCheckoutPaths: [[path: "${env.CD_JENKINSFILE_GH_PATH}"],
-                                                      [path: "${env.DOCKERFILE_GH_PATH}"],
-                                                      [path: "${env.EMAIL_TEMP_SCRIPT}"]]
+                                                      [path: "${env.DOCKERFILE_GH_PATH}"]
                             ]
                         ]
                     ])
@@ -118,9 +114,6 @@ pipeline {
     post {
         always {
             script {
-                def email_temp_script = env.EMAIL_TEMP_SCRIPT.tokenize('/').last()
-                def emailScript = load "${WORKSPACE}/${env.EMAIL_TEMP_SCRIPT}"
-                emailScript.sendEmailNotification(currentBuild, env)
                 env.DOCKER_CONFIG_SECRET = null
             }
         }
