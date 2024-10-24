@@ -6,7 +6,7 @@ pipeline {
         SPRING_BOOT_PROJECT_NAME = '5DS3-G1-devopsSpring'
         GITHUB_REPO_URL = 'https://github.com/chayma24/5DS3-G1-devopsSping.git'
         GIT_BRANCH = 'ChaimaGharbi-5DS3-G1'
-        JKNS_GH_CRD_ID = jenkins_token_backend'
+        JKNS_GH_CRD_ID ='jenkins_token_backend'
         CD_JENKINSFILE_GH_PATH = '5DS3-G1-devopsSpring/cd_backend/Jenkinsfile'
         DOCKERFILE_GH_PATH = '5DS3-G1-devopsSpring/Dockerfile'
         DOCKER_CONFIG_SECRET = 'docker_id'
