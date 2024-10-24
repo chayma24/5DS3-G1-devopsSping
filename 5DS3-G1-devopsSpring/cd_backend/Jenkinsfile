@@ -34,7 +34,10 @@ pipeline {
                                                       [path: "${env.DOCKERFILE_GH_PATH}"]
                             ]
                         ]
-                    ])
+                    ]
+                    ]
+                    )
+                    
                 }
             }
         }
