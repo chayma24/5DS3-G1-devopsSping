@@ -104,9 +104,8 @@ pipeline {
             def startTime = System.currentTimeMillis()
 
             try {
-                // Use the token directly for Docker login
-                withCredentials([string(credentialsId: env.DOCKER_CONFIG_SECRET, variable: 'DOCKER_TOKEN')]) {
-                    sh 'echo "$DOCKER_TOKEN" | docker login --username chayma24 --password-stdin'
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_CONFIG_SECRET, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin'
                 }
                 docker.image("${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
             } catch (Exception e) {
@@ -120,6 +119,7 @@ pipeline {
         }
     }
 }
+
 }
     post {
         always {
