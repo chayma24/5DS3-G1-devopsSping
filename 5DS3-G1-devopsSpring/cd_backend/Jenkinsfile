@@ -98,28 +98,28 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-            steps {
-                script {
-                    def dockerPushStatus = 'SUCCESS'
-                    def startTime = System.currentTimeMillis()
+    steps {
+        script {
+            def dockerPushStatus = 'SUCCESS'
+            def startTime = System.currentTimeMillis()
 
-                    try {
-                        sh 'mkdir -p $HOME/.docker'
-                        sh 'cp $DOCKER_CONFIG_SECRET $HOME/.docker/config.json'
-                        docker.image("${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
-                    } catch (Exception e) {
-                        dockerPushStatus = 'FAILURE'
-                        throw e
-                    } finally {
-                        def duration = (System.currentTimeMillis() - startTime) / 1000
-                        env.DOCKER_PUSH_STATUS = dockerPushStatus
-                        env.DOCKER_PUSH_DURATION = "${duration} seconds"
-                        sh 'rm -f $HOME/.docker/config.json'
-                    }
+            try {
+                // Use the token directly for Docker login
+                withCredentials([string(credentialsId: env.DOCKER_CONFIG_SECRET, variable: 'DOCKER_TOKEN')]) {
+                    sh 'echo "$DOCKER_TOKEN" | docker login --username chayma24 --password-stdin'
                 }
+                docker.image("${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+            } catch (Exception e) {
+                dockerPushStatus = 'FAILURE'
+                throw e
+            } finally {
+                def duration = (System.currentTimeMillis() - startTime) / 1000
+                env.DOCKER_PUSH_STATUS = dockerPushStatus
+                env.DOCKER_PUSH_DURATION = "${duration} seconds"
             }
         }
     }
+}
 
     post {
         always {
