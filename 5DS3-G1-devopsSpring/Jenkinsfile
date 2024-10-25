@@ -7,55 +7,80 @@ pipeline {
     }
 
     environment {
-        // Allocate a maximum of 1024 MB (1 GB) of heap memory.
         MAVEN_OPTS = '-Xmx1024m'
+        SONAR_TOKEN = credentials('sonar_token') // Store SonarQube token in Jenkins credentials
+        DOCKER_CONFIG_SECRET = 'docker_id'
+        DOCKER_IMAGE_NAME = 'chayma24/5ds3-g1-devopsspring'
+        GITHUB_REPO_URL = 'https://github.com/chayma24/5DS3-G1-devopsSping.git'
+        GIT_BRANCH = 'ChaimaGharbi-5DS3-G1'
+        SPRING_BOOT_PROJECT_NAME = '5DS3-G1-devopsSpring'
     }
 
     stages {
         stage('Clone') {
             steps {
-                git url: 'https://github.com/chayma24/5DS3-G1-devopsSping.git',
-                branch: 'ChaimaGharbi-5DS3-G1',
-                credentialsId: 'jenkins_token_backend'
+                git url: "${env.GITHUB_REPO_URL}",
+                    branch: "${env.GIT_BRANCH}",
+                    credentialsId: 'jenkins_token_backend'
             }
         }
 
         stage('Build') {
             steps {
-                dir('5DS3-G1-devopsSpring') {
+                dir(env.SPRING_BOOT_PROJECT_NAME) {
                     sh 'mvn clean package'
                 }
             }
-        } 
+        }
 
         stage('Test') {
             steps {
-                dir('5DS3-G1-devopsSpring') {
+                dir(env.SPRING_BOOT_PROJECT_NAME) {
                     sh 'mvn test -Dspring.profiles.active=test'
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Code Coverage') {
             steps {
-                dir('5DS3-G1-devopsSpring') {
-                    script {
-                        sh 'docker build -t 5ds3-g1-devopsspring .'
+                dir(env.SPRING_BOOT_PROJECT_NAME) {
+                    sh 'mvn clean verify -Pcoverage' // Runs tests and generates JaCoCo report
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                dir(env.SPRING_BOOT_PROJECT_NAME) {
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=my_project_key -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
                     }
                 }
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Archive JAR') {
             steps {
-                script {
-                    def imageName = '5ds3-g1-devopsspring'
-            def dockerHubCredentialsId = 'docker_id' 
-            
-            withCredentials([usernamePassword(credentialsId: dockerHubCredentialsId, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin"
-                sh "docker tag ${imageName} ${DOCKER_USERNAME}/${imageName}:latest"
-                sh "docker push ${DOCKER_USERNAME}/${imageName}:latest"
+                dir("${env.SPRING_BOOT_PROJECT_NAME}/target") {
+                    archiveArtifacts artifacts: '*.jar', fingerprint: true
+                }
+            }
+        }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                dir(env.SPRING_BOOT_PROJECT_NAME) {
+                    script {
+                        def imageTag = "${env.DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+
+                        // Build the Docker image
+                        docker.build(imageTag, "--build-arg JAR_FILE=*.jar .")
+
+                        // Log in and push the Docker image
+                        withCredentials([usernamePassword(credentialsId: env.DOCKER_CONFIG_SECRET, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            sh 'echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin'
+                            docker.image(imageTag).push()
+                        }
                     }
                 }
             }
@@ -64,15 +89,13 @@ pipeline {
 
     post {
         success {
-            echo 'Build successful!!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            // Uncomment the following lines to enable email notifications on failure
-            // mail to: 'Chayma.Gharbi@esprit.tn',
-            //      subject: "Jenkins Build Failed: ${env.JOB_NAME}",
-            //      body: "Build ${env.BUILD_NUMBER} of job ${env.JOB_NAME} failed. Check Jenkins for details."
-            echo 'Build failed'
+            echo 'Pipeline failed.'
+        }
+        always {
+            cleanWs() // Clean workspace after execution
         }
     }
 }
-
