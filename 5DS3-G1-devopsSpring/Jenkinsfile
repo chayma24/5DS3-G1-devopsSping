@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         MAVEN_OPTS = '-Xmx1024m'
-        SONAR_TOKEN ='sonar_token' // Store SonarQube token in Jenkins credentials
+        SONAR_TOKEN ='sonarcloud_token' 
         DOCKER_CONFIG_SECRET = 'docker_id'
         DOCKER_IMAGE_NAME = 'chayma24/5ds3-g1-devopsspring'
         GITHUB_REPO_URL = 'https://github.com/chayma24/5DS3-G1-devopsSping.git'
@@ -49,12 +49,17 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarCloud Analysis') {
             steps {
                 dir(env.SPRING_BOOT_PROJECT_NAME) {
-                    withSonarQubeEnv('SonarQube') {
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=sonarqube_backend -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN'
-                    }
+                    // Run SonarCloud analysis
+                    sh '''
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=chayma24\
+                        -Dsonar.organization=chayma24 \
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.login=${SONAR_TOKEN}
+                    '''
                 }
             }
         }
