@@ -1,4 +1,4 @@
-package tn.esprit.devops_project.services.Iservices;
+package tn.esprit.devops_project.services.iservices;
 
 import tn.esprit.devops_project.entities.Invoice;
 
@@ -22,6 +22,6 @@ public interface IInvoiceService {
 
 	void applyDiscountToSupplierInvoices(Long supplierId, float discountPercentage, Date startDate, Date endDate);
 
-	void deleteInvoice(Long InvoiceId);
+	void deleteInvoice(Long invoiceId);
 
 	}

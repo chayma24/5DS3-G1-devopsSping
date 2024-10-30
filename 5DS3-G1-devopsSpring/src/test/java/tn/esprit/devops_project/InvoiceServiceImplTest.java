@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.devops_project.entities.Invoice;
 import tn.esprit.devops_project.entities.Supplier;
-import tn.esprit.devops_project.services.Iservices.IInvoiceService;
-import tn.esprit.devops_project.services.Iservices.ISupplierService;
+import tn.esprit.devops_project.services.iservices.IInvoiceService;
+import tn.esprit.devops_project.services.iservices.ISupplierService;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
-public class InvoiceServiceImplTest {
+class InvoiceServiceImplTest {
 
     @Autowired
     IInvoiceService invoiceService;

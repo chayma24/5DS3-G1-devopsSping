@@ -10,7 +10,7 @@ import tn.esprit.devops_project.repositories.InvoiceDetailRepository;
 import tn.esprit.devops_project.repositories.InvoiceRepository;
 import tn.esprit.devops_project.repositories.OperatorRepository;
 import tn.esprit.devops_project.repositories.SupplierRepository;
-import tn.esprit.devops_project.services.Iservices.IInvoiceService;
+import tn.esprit.devops_project.services.iservices.IInvoiceService;
 
 import java.util.Date;
 import java.util.List;
@@ -32,7 +32,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public void cancelInvoice(Long invoiceId) {
 		// method 01
-		Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new NullPointerException("Invoice not found"));
+		Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new NullPointerException("Invoice not exist"));
 		invoice.setArchived(true);
 		invoiceRepository.save(invoice);
 		//method 02 (Avec JPQL)
@@ -54,7 +54,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	@Override
 	public List<Invoice> getInvoicesBySupplier(Long idSupplier) {
 		Supplier supplier = supplierRepository.findById(idSupplier).orElseThrow(() -> new NullPointerException("Supplier not found"));
-		return (List<Invoice>) supplier.getInvoices();
+		return supplier.getInvoices();
 	}
 
 	@Override
@@ -71,8 +71,8 @@ public class InvoiceServiceImpl implements IInvoiceService {
 	}
 
 	@Override
-	public void deleteInvoice(Long InvoiceId) {
-		invoiceRepository.deleteById(InvoiceId);
+	public void deleteInvoice(Long invoiceId) {
+		invoiceRepository.deleteById(invoiceId);
 
 	}
 
@@ -87,7 +87,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 		// Step 3: Apply the discount
 		for (Invoice invoice : invoices) {
-			if (!invoice.getArchived()) {
+			if (invoice.getArchived() == Boolean.FALSE) {
 				// Calculate the discount amount
 				float discountAmount = invoice.getAmountInvoice() * (discountPercentage / 100);
 				// Apply the discount
