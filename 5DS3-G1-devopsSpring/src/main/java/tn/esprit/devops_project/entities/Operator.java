@@ -31,6 +31,6 @@ public class Operator implements Serializable{
 	String password;
 	@OneToMany
 	@JsonIgnore
-	transient Set<Invoice> invoices;
+	private Set<Invoice> invoices;
 	
 }

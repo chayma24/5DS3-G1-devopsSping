@@ -19,5 +19,5 @@ public class Stock implements Serializable {
     long idStock;
     String title;
     @OneToMany(mappedBy = "stock")
-    transient Set<Product> products;
+    private Set<Product> products;
 }

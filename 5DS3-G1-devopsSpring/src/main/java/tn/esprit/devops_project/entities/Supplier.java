@@ -25,7 +25,7 @@ public class Supplier implements Serializable {
 	SupplierCategory supplierCategory;
 	@OneToMany(mappedBy="supplier", fetch = FetchType.EAGER)
 //	@JsonIgnore
-	transient List<Invoice> invoices;
+	private List<Invoice> invoices;
     
 
 	
