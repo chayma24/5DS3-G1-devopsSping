@@ -98,9 +98,12 @@ pipeline {
             stage('Deploy with Docker Compose') {
             steps {
                 script {
+                dir(env.PATH) {
+
                     sh 'docker-compose pull'
 
                     sh 'docker-compose up -d'
+                }
                 }
             }
         }
