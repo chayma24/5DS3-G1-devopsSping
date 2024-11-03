@@ -93,7 +93,17 @@ pipeline {
                 }
             }
         }
-    }
+        
+            stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    sh 'docker-compose pull'
+
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+}    
 
     post {
         success {
@@ -106,4 +116,5 @@ pipeline {
             cleanWs() // Clean workspace after execution
         }
     }
+
 }
