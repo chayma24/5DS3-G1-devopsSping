@@ -103,7 +103,7 @@ pipeline {
                 }
             }
         }
-    
+}    
 
     post {
         success {
@@ -116,5 +116,5 @@ pipeline {
             cleanWs() // Clean workspace after execution
         }
     }
-}
+
 }
