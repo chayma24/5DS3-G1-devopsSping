@@ -14,7 +14,7 @@ pipeline {
         GITHUB_REPO_URL = 'https://github.com/chayma24/5DS3-G1-devopsSping.git'
         GIT_BRANCH = 'ChaimaGharbi-5DS3-G1'
         SPRING_BOOT_PROJECT_NAME = '5DS3-G1-devopsSpring'
-        PATH = "/Desktop/5DS3-G1-devopsSping/5DS3-G1-devopsSpring/docker-compose.yaml"
+        PATH = "/Desktop/5DS3-G1-devopsSping/5DS3-G1-devopsSpring"
     }
 
     stages {
