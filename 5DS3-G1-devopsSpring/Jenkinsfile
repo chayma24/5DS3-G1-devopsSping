@@ -98,6 +98,8 @@ pipeline {
             stage('Deploy with Docker Compose') {
             steps {
                 script {
+                    sh 'docker-compose pull'
+
                     sh 'docker-compose up -d'
                 }
             }
