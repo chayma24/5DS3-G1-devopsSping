@@ -97,12 +97,14 @@ pipeline {
             stage('Deploy with Docker Compose') {
             steps {
                 script {
+                dir('/var/lib/jenkins/workspace/ci_cd pipeline backend/5DS3-G1-devopsSpring') {
 
                     sh 'docker-compose pull'
 
                     sh 'docker-compose up -d'
                 }
                 
+            }
             }
         }
 }    
