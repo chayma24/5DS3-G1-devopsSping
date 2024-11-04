@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    ports:
+      - "8081:8081"  # Port pour accéder à Nexus
+    volumes:
+      - nexus-data:/nexus-data  # Volume pour stocker les données de Nexus
+    networks:
+      - nexus-sonarqube-net
+
+  sonarqube:
+    image: sonarqube:8.9.7-community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"  # Port pour accéder à SonarQube
+    volumes:
+      - sonarqube-data:/opt/sonarqube/data  # Volume pour stocker les données de SonarQube
+      - sonarqube-logs:/opt/sonarqube/logs  # Volume pour stocker les logs de SonarQube
+      - sonarqube-extensions:/opt/sonarqube/extensions  # Volume pour les extensions de SonarQube
+    networks:
+      - nexus-sonarqube-net
+
+volumes:
+  nexus-data:
+  sonarqube-data:
+  sonarqube-logs:
+  sonarqube-extensions:
+
+networks:
+  nexus-sonarqube-net:
+

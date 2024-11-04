@@ -7,14 +7,17 @@ services:
       MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
-  
+
   app:
-    image: youssefrais/projetdevops
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8090:8090"
+      - "8089:8089"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
       - mysql
+

@@ -1,6 +1,14 @@
 FROM openjdk:17-jdk-alpine 
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+# Define the directory for the app
+WORKDIR /app
+
+# Download the artifact from Nexus and copy it into the container
+# Replace "your-group-id" and "your-artifact-id" with actual values from your Nexus repository structure
+ADD http://192.168.141.136:8081/repository/maven-releases/tn/esprit/DevOps_Project/1.0/DevOps_Project-1.0.jar app.jar
+
+# Expose the port that the app will run on
+EXPOSE 8089
+
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "app.jar"]
