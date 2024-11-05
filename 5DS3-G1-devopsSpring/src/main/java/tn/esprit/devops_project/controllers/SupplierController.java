@@ -2,6 +2,7 @@ package tn.esprit.devops_project.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.devops_project.dto.SupplierDTO;
 import tn.esprit.devops_project.entities.Invoice;
 import tn.esprit.devops_project.entities.Supplier;
 import tn.esprit.devops_project.entities.SupplierCategory;
@@ -16,34 +17,26 @@ public class SupplierController {
 
 	private final ISupplierService supplierService;
 
-	// Inner DTO class to encapsulate Supplier data
-	public static class SupplierDTO {
-		 String code;
-		 String label;
-		 String supplierCategory; // Representing the enum as a String
-		 List<Long> invoiceIds;   // Only exposing invoice IDs, not the full Invoice objects
-	}
-
 	// Helper method to convert Supplier entity to DTO
 	private SupplierDTO toDTO(Supplier supplier) {
 		SupplierDTO dto = new SupplierDTO();
-		dto.code = supplier.getCode();
-		dto.label = supplier.getLabel();
-		dto.supplierCategory = supplier.getSupplierCategory().name();
-		dto.invoiceIds = supplier.getInvoices()
+		dto.setCode(supplier.getCode());
+		dto.setLabel(supplier.getLabel());
+		dto.setSupplierCategory(supplier.getSupplierCategory().name());
+		dto.setInvoiceIds(supplier.getInvoices()
 				.stream()
-				.map(Invoice::getIdInvoice)  // Method reference used here
-				.collect(Collectors.toList());
+				.map(Invoice::getIdInvoice)
+				.collect(Collectors.toList()));
 		return dto;
 	}
 
 	// Helper method to convert DTO to Supplier entity
 	private Supplier toEntity(SupplierDTO dto) {
 		Supplier supplier = new Supplier();
-		supplier.setCode(dto.code);
-		supplier.setLabel(dto.label);
-		supplier.setSupplierCategory(SupplierCategory.valueOf(dto.supplierCategory));
-		return supplier;  // Invoices are managed separately and not set here
+		supplier.setCode(dto.getCode());
+		supplier.setLabel(dto.getLabel());
+		supplier.setSupplierCategory(SupplierCategory.valueOf(dto.getSupplierCategory()));
+		return supplier;
 	}
 
 	@GetMapping("/supplier")
@@ -68,12 +61,12 @@ public class SupplierController {
 	}
 
 	@DeleteMapping("/supplier/{supplierId}")
-	public void removeFournisseur(@PathVariable Long supplierId) {
+	public void removeSupplier(@PathVariable Long supplierId) {
 		supplierService.deleteSupplier(supplierId);
 	}
 
 	@PutMapping("/supplier")
-	public SupplierDTO modifyFournisseur(@RequestBody SupplierDTO supplierDTO) {
+	public SupplierDTO modifySupplier(@RequestBody SupplierDTO supplierDTO) {
 		Supplier supplier = toEntity(supplierDTO);
 		Supplier updatedSupplier = supplierService.updateSupplier(supplier);
 		return toDTO(updatedSupplier);

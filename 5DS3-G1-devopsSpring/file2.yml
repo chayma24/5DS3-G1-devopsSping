@@ -5,30 +5,53 @@ services:
     image: sonatype/nexus3
     container_name: nexus
     ports:
-      - "8081:8081"  # Port pour accéder à Nexus
+      - "8081:8081"
     volumes:
-      - nexus-data:/nexus-data  # Volume pour stocker les données de Nexus
+      - nexus-data:/nexus-data
     networks:
-      - nexus-sonarqube-net
+      - monitoring-net
 
   sonarqube:
     image: sonarqube:8.9.7-community
     container_name: sonarqube
     ports:
-      - "9000:9000"  # Port pour accéder à SonarQube
+      - "9000:9000"
     volumes:
-      - sonarqube-data:/opt/sonarqube/data  # Volume pour stocker les données de SonarQube
-      - sonarqube-logs:/opt/sonarqube/logs  # Volume pour stocker les logs de SonarQube
-      - sonarqube-extensions:/opt/sonarqube/extensions  # Volume pour les extensions de SonarQube
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-logs:/opt/sonarqube/logs
+      - sonarqube-extensions:/opt/sonarqube/extensions
     networks:
-      - nexus-sonarqube-net
+      - monitoring-net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring-net
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitoring-net
 
 volumes:
   nexus-data:
   sonarqube-data:
   sonarqube-logs:
   sonarqube-extensions:
+  prometheus-data:
+  grafana-data:
 
 networks:
-  nexus-sonarqube-net:
+  monitoring-net:
 

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   mysql:
     image: mysql:8
@@ -7,11 +7,16 @@ services:
       MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.spring
     ports:
       - "8089:8089"
     environment:
@@ -19,5 +24,12 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
+  angular:
+    build:
+      context: .
+      dockerfile: Dockerfile.angular
+    ports:
+      - "4200:80"
