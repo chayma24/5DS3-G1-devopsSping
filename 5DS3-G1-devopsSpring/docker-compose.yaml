@@ -17,7 +17,7 @@ services:
             - backend
 
     backend:
-        image: chayma24/5ds3-g1-devopsspring:latest
+        image: chayma24/5ds3-g1-devopsspring:37
         container_name: backend
         restart: always
         environment:
