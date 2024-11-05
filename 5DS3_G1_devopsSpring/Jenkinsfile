@@ -13,11 +13,17 @@ pipeline {
             }
         }
 
-        stage("Compile") {
-            steps {
-                sh "mvn clean"
-            }
-        }
+        stage("clean") {
+                    steps {
+                            sh "mvn clean"
+                    }
+                }
+
+                        stage("Compile") {
+                    steps {
+                            sh "mvn compile"
+                    }
+                }
 
         /*stage("Junit/Mockito") {
             steps {
