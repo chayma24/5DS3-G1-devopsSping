@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import tn.esprit.devopsSpring_5DS3_G1.entities.Stock;
 import tn.esprit.devopsSpring_5DS3_G1.repositories.StockRepository;
+import tn.esprit.devopsSpring_5DS3_G1.services.*;
 //Saleeeem
 import java.util.Arrays;
 import java.util.Optional;
