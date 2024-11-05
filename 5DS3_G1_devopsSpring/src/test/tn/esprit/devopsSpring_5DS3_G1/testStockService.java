@@ -2,22 +2,20 @@ package tn.esprit.devopsSpring_5DS3_G1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.devopsSpring_5DS3_G1.entities.Stock;
 import tn.esprit.devopsSpring_5DS3_G1.repositories.StockRepository;
-//Saleeeem
-import java.util.Arrays;
+import tn.esprit.devopsSpring_5DS3_G1.services.StockServiceImpl;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-//Taaaaaaz
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -33,7 +31,7 @@ class StockServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize the stock object
+        // Initialize the stock object with a title and empty products
         stock = new Stock();
         stock.setTitle("Test Stock");
         stock.setProducts(new HashSet<>());  // Initially no products
