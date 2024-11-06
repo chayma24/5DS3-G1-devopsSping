@@ -6,7 +6,7 @@ services:
       MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
-
+      
   app:
     build:
       context: .
@@ -26,3 +26,5 @@ services:
       dockerfile: Dockerfile.angular
     ports:
       - "4200:80"  
+      
+
