@@ -55,14 +55,14 @@ pipeline {
             }
         }*/
 
-       /*  stage('MOCKITO Test') {
+         stage('MOCKITO Test') {
             steps {
                 echo "test avec maven"
                 dir('tp-foyer') {
                     sh "mvn test"
                 }
             }
-        } */
+        }
 
          /*stage('Docker Security Scanning with Trivy') {
             steps {
