@@ -13,9 +13,8 @@ pipeline {
         stage('Maven Clean') {
             steps {
                echo "Clean avec maven"
-                dir('tp-foyer') {
                     sh "mvn clean"
-                }
+
             }
 
         }
@@ -23,10 +22,10 @@ pipeline {
         stage('Maven Compile') {
             steps {
                 echo "compilation avec maven"
-                dir('tp-foyer') {
+
                     sh "mvn compile"
                     sh "mvn package"
-                }
+
             }
         }
 
@@ -112,25 +111,28 @@ pipeline {
                      archiveArtifacts artifacts: "trivy-reports/*.json", allowEmptyArchive: true
                  }
              }
-         }
+         }*/
 
 
 
          stage('MVN Sonarqube') {
             steps {
                 echo "analyse avec sonarqube"
-                dir('tp-foyer') {
-                    withCredentials([string(credentialsId: '11ea0d21-5ae7-4510-bfdf-6cf8d80558d3',
+
+                   /* withCredentials([string(credentialsId: '11ea0d21-5ae7-4510-bfdf-6cf8d80558d3',
                                         variable: 'SONAR_TOKEN')]) {
                         sh """
                         mvn sonar:sonar \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.login=\$SONAR_TOKEN
                         """
-                    }
-                }
+                    }*/
+
+
+                    sh "mvn sonar:sonar -Dsonar.host.url=http://192.168.50.4:9000 -Dsonar.login=admin -Dsonar.password=Sonar1234567890."
+
             }
-        }*/
+        }
 
 
        /*   stage('Nexus Deploy') {
