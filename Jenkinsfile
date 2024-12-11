@@ -119,17 +119,14 @@ pipeline {
             steps {
                 echo "analyse avec sonarqube"
 
-                   /* withCredentials([string(credentialsId: '11ea0d21-5ae7-4510-bfdf-6cf8d80558d3',
+                    withCredentials([string(credentialsId: '7dc5b637-18fc-4b9d-96f0-15c9dd938d7f',
                                         variable: 'SONAR_TOKEN')]) {
                         sh """
                         mvn sonar:sonar \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.login=\$SONAR_TOKEN
                         """
-                    }*/
-
-
-                    sh "mvn sonar:sonar -Dsonar.host.url=http://192.168.50.4:9000 -Dsonar.login=admin -Dsonar.password=Sonar1234567890."
+                    }
 
             }
         }
