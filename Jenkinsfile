@@ -119,14 +119,18 @@ pipeline {
             steps {
                 echo "analyse avec sonarqube"
 
-                    withCredentials([string(credentialsId: '7dc5b637-18fc-4b9d-96f0-15c9dd938d7f',
+                    withCredentials([usernamePassword(credentialsId: '7dc5b637-18fc-4b9d-96f0-15c9dd938d7f', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USER')]) {
+                        sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_USER"
+                    }
+
+                    /*withCredentials([string(credentialsId: '7dc5b637-18fc-4b9d-96f0-15c9dd938d7f',
                                         variable: 'SONAR_TOKEN')]) {
                         sh """
                         mvn sonar:sonar \
                         -Dsonar.host.url=$SONAR_HOST_URL \
                         -Dsonar.login=\$SONAR_TOKEN
                         """
-                    }
+                    }*/
 
             }
         }
