@@ -29,38 +29,11 @@ pipeline {
             }
         }
 
-        /*
-
-         stage('OWASP Dependency-Check') {
-            steps {
-                dir('tp-foyer') {
-                    echo 'Exécution de l\'analyse de dépendances avec OWASP Dependency-Check'
-                    sh 'mvn org.owasp:dependency-check-maven:check'
-                }
-            }
-        }
-        stage('Publish Dependency-Check Report') {
-            steps {
-                dir('tp-foyer') {
-                    echo 'Publication du rapport OWASP Dependency-Check'
-                     publishHTML(
-                        target: [
-                            reportName: 'OWASP Dependency-Check Report',
-                            reportDir: 'target/dependency-check-report', // Le répertoire où le rapport est généré
-                            reportFiles: 'index.html', // Le fichier HTML généré par OWASP Dependency-Check
-                            keepAll: true
-                       ]
-                     )
-                }
-            }
-        }*/
 
          stage('MOCKITO Test') {
             steps {
                 echo "test avec maven"
-                dir('tp-foyer') {
                     sh "mvn test"
-                }
             }
         }
 
