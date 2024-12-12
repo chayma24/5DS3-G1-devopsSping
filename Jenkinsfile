@@ -13,7 +13,7 @@ pipeline {
         stage('Maven Clean') {
             steps {
                echo "Clean avec maven"
-                    sh "mvn clean package"
+                    sh "mvn clean"
 
             }
 
@@ -101,7 +101,7 @@ pipeline {
                                                   passwordVariable: 'DOCKER_PASSWORD')]) {*/
                     sh "docker login -u miguelonana -p migueldockerhub1234" // \$ permet de récupérer la valeur de la variable non lu par Jenkins mais par le shell
                     sh "docker push $BACKEND_IMAGE"  // "$" va permettre à Jenkins de récupérer la valeur de la variable BACKEND_IMAGE
-                  
+
 
                // }
             }
