@@ -107,11 +107,13 @@ pipeline {
         }
 
 
-       /*   stage('Nexus Deploy') {
+          stage('Nexus Deploy') {
             steps {
                 echo "Déploiement sur Nexus"
-                dir('tp-foyer') {
-                    withCredentials([usernamePassword(credentialsId: 'bcc1b017-d8af-459d-883d-133048e255b8',
+
+                sh "mvn deploy -DskipTests -Dusername=admin -Dpassword=sonatype1234 "
+
+                    /*withCredentials([usernamePassword(credentialsId: 'bcc1b017-d8af-459d-883d-133048e255b8',
                                                    usernameVariable: 'NEXUS_USERNAME',
                                                    passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh """
@@ -120,10 +122,10 @@ pipeline {
                         -Dusername=\$NEXUS_USERNAME \
                         -Dpassword=\$NEXUS_PASSWORD
                         """
-                    }
-                }
+                    }*/
+
             }
-        } */
+        }
 
 
 
