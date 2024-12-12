@@ -13,7 +13,7 @@ pipeline {
         stage('Maven Clean') {
             steps {
                echo "Clean avec maven"
-                    sh "mvn clean"
+                    sh "mvn clean package"
 
             }
 
@@ -36,55 +36,6 @@ pipeline {
                     sh "mvn test"
             }
         }
-
-         /*stage('Docker Security Scanning with Trivy') {
-            steps {
-                dir("tp-foyer") {
-                    script {
-                            // Récupérer dynamiquement les IDs des conteneurs en cours d'exécution
-                            def containerIds = sh(script: "docker ps -q", returnStdout: true).trim().split("\n")
-                            def reportsDir = "trivy-reports/"
-                            sh "mkdir -p ${reportsDir}"
-
-                            // Exécuter un scan Trivy pour chaque conteneur en parallèle
-                            parallel containerIds.collectEntries { containerId ->
-                                ["Scan ${containerId}": {
-                                    try {
-                                        // Récupérer l'image associée à l'ID du conteneur
-                                        def image = sh(script: "docker inspect --format '{{.Config.Image}}' ${containerId}", returnStdout: true).trim()
-                                        echo "Scanning container image: ${image} with Trivy"
-
-                                        // Exécuter le scan Trivy et sauvegarder le rapport en format JSON
-                                        sh """
-                                        trivy image \
-                                        --severity LOW,MEDIUM,HIGH,CRITICAL \
-                                        --exit-code 1 \
-                                        --no-progress \
-                                        --format json \
-                                        --output ${reportsDir}/trivy-report-${containerId}.json \
-                                        ${image}
-                                        """
-
-                                    } catch (Exception e) {
-                                        echo "Failed to scan container ${containerId}: ${e}"
-                                    }
-                                }]
-                            }
-
-                    }
-                }
-            }
-        }
-
-
-         // Étape pour archiver les rapports de Trivy
-         stage('Archive Reports') {
-             steps {
-                 dir("tp-foyer") {
-                     archiveArtifacts artifacts: "trivy-reports/*.json", allowEmptyArchive: true
-                 }
-             }
-         }*/
 
 
 
@@ -129,39 +80,30 @@ pipeline {
 
 
 
-        /*stage('Building backend image') {
+        stage('Building backend image') {
             steps {
                 echo "creating backend docker image"
-                dir('tp-foyer') {
+
                     sh "docker build -f Dockerfile -t $BACKEND_IMAGE ."
-                }
+
             }
-        }*/
+        }
 
 
-       /*  stage('building frontend image') {
-            steps {
-                echo "creating frontend docker image"
-                dir('tp-foyer-frontend') {
-                     //sh 'npm install'
-                     //sh 'npm run build --prod'
-                     sh "docker build -f Dockerfile-angular -t $FRONTEND_IMAGE ."
-               }
-            }
-        } */
 
-        /*stage('Pushing image') {
+
+        stage('Pushing image') {
             steps {
                 echo "Push docker images"
                 // Utilise withCredentials pour récupérer les credentials Docker Hub
-                withCredentials([usernamePassword(credentialsId: '8b6e20fb-38d6-41ce-a2f5-7a32a513881c',
+               /* withCredentials([usernamePassword(credentialsId: '8b6e20fb-38d6-41ce-a2f5-7a32a513881c',
                                                   usernameVariable: 'DOCKER_USERNAME',
-                                                  passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker login -u \${DOCKER_USERNAME} -p \${DOCKER_PASSWORD}" // \$ permet de récupérer la valeur de la variable non lu par Jenkins mais par le shell
+                                                  passwordVariable: 'DOCKER_PASSWORD')]) {*/
+                    sh "docker login -u miguelonana -p migueldockerhub1234" // \$ permet de récupérer la valeur de la variable non lu par Jenkins mais par le shell
                     sh "docker push $BACKEND_IMAGE"  // "$" va permettre à Jenkins de récupérer la valeur de la variable BACKEND_IMAGE
-                  //  sh "docker push $FRONTEND_IMAGE"
+                  
 
-                }
+               // }
             }
         }
 
@@ -173,9 +115,9 @@ pipeline {
                  /*lance le conteneur en arriere plan pour permettre à jenkins
                 de continuer la prochaine etape du pipeline sans attendrent que
                  ce service docker se termine et reconstruis les images déjà existantes
-                 lorsqu'on a eu à effectuer des modifs dans le code source ou dans dockerfile //
+                 lorsqu'on a eu à effectuer des modifs dans le code source ou dans dockerfile */
                 sh "docker compose up -d --build"
             }
-        }*/
+        }
     }
 }
